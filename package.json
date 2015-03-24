@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server --devtool eval --progress --colors --content-base build"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,8 @@
   },
   "homepage": "https://github.com/isaachess/pong",
   "dependencies": {
+    "css-loader": "^0.9.1",
+    "style-loader": "^0.9.0",
     "webpack": "^1.7.3"
   }
 }
