@@ -19,6 +19,8 @@
   "homepage": "https://github.com/isaachess/pong",
   "dependencies": {
     "css-loader": "^0.9.1",
+    "jsx-loader": "^0.12.2",
+    "react": "^0.13.1",
     "style-loader": "^0.9.0",
     "webpack": "^1.7.3"
   }
