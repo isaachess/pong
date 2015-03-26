@@ -1,3 +1,4 @@
+var webpack = require('webpack');
 var bower_dir = __dirname + '/bower_components';
 
 var config = {
@@ -5,7 +6,9 @@ var config = {
         this.resolve.alias[name] = path;
         this.module.noParse.push(new RegExp(path));
     },
-    entry: ['./app/main.js'],
+    entry: {
+        app: ['./app/main.js'],
+    },
     output: {
         path: './build',
         filename: 'bundle.js'
@@ -13,10 +16,31 @@ var config = {
     resolve: { alias: {} },
     module: {
         noParse: [],
+        preLoaders: [
+            {
+                test: /\.jsx?$/, // include .js files
+                exclude: [/node_modules/, /bower_components/], // exclude any and all files in the node_modules folder
+                loader: "jsxhint-loader"
+            }
+        ],
         loaders: [
-            { test: /\.jsx$/, loader: 'jsx-loader' },
-            { test: /\.js$/, loader: 'jsx-loader' }
+            { test: /\.jsx?$/, loader: 'jsx-loader' },
+            //{ test: /\.jsx$/, loader: 'jsx-loader' },
+            { test: /\.jsx?$/, exclude: [/node_modules/, /bower_components/], loader: '6to5-loader?experimental=true'},
+            //{ test: /\.jsx$/, exclude: /node_modules/, loader: '6to5-loader?experimental=true'}
         ]
+    },
+    plugins: [
+        new webpack.ProvidePlugin({
+            to5Runtime: "imports?global=>{}!exports-loader?global.to5Runtime!6to5/runtime"
+        })
+    ],
+    jshint: {
+        "esnext": true,
+        "undef": true,
+        "unused": true,
+        "browser": true,
+        "devel": true
     }
 };
 

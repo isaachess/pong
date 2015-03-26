@@ -23,5 +23,13 @@
     "react": "^0.13.1",
     "style-loader": "^0.9.0",
     "webpack": "^1.7.3"
+  },
+  "devDependencies": {
+    "6to5-core": "^3.6.5",
+    "6to5-loader": "^3.0.0",
+    "jshint": "^2.6.3",
+    "jshint-loader": "^0.8.3",
+    "jsxhint-loader": "^0.2.0",
+    "webpack-traceur-loader": "^0.3.0"
   }
 }
