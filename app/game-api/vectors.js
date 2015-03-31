@@ -9,3 +9,5 @@ export function bounceX(vector) {
 export function bounceY(vector) {
     return { x: vector.x, y: -vector.y };
 }
+
+

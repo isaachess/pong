@@ -5,7 +5,7 @@ var constants = require('./constants.js');
 export function startBallInfo() {
     return {
         ballLocation: { x: 0, y: 0 },
-        ballVector: { x: 0, y: 100 }
+        ballVector: { x: 0, y: 10 }
     };
 }
 
@@ -23,7 +23,6 @@ export function nextTick(prevBallInfo, paddleInfo) {
 
 function calcNewBallInfo(oldBallInfo, paddleInfo) {
     var newVector = newBallVector(oldBallInfo, paddleInfo);
-    console.log('newVector', newVector);
     var newLocation = vectors.addVectors(oldBallInfo.ballLocation, newVector);
     return newBallInfo(newLocation, newVector);
 }

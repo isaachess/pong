@@ -7,29 +7,36 @@ export function bounceVector(ballInfo) {
 }
 
 export function willBounce(ballInfo, paddleInfo) {
-    // Get next location based on info -- see if that location is on the paddle
-    // If so, return true
-    // Else return false
     var potentialLocation = vectors.addVectors(ballInfo.ballLocation, ballInfo.ballVector);
     return locationHitsAnyPaddle(potentialLocation, paddleInfo);
 }
 
 function locationHitsAnyPaddle(location, paddleInfo) {
-    return locationHitsOnePaddle(location, paddleInfo.player1) || locationHitsOnePaddle(location, paddleInfo.player2);
+    var hitsPlayer1 = locationHitsOnePaddle(location, paddleInfo.player1);
+    var hitsPlayer2 = locationHitsOnePaddle(location, paddleInfo.player2);
+    return hitsPlayer1 || hitsPlayer2;
 }
 
 function locationHitsOnePaddle(location, singlePaddleCoord) {
-    // TODO: Take into account width of paddle.
-    var ballRadius = constants.BALL_DIAMETER/2;
-    var paddleThickness = constants.PADDLE_THICKNESS;
-    //var paddleWidthRadius = constants.PADDLE_WIDTH/2;
+    var ballRect = getRectanglePoints(location, constants.BALL_DIAMETER, constants.BALL_DIAMETER);
+    var paddleRect = getRectanglePoints(singlePaddleCoord, constants.PADDLE_WIDTH, constants.PADDLE_THICKNESS);
+    return rectanglesIntersect(ballRect, paddleRect);
+}
 
-    var ballTop = location.y + ballRadius;
-    var ballBottom = location.y - ballRadius;
-    var paddleTop = singlePaddleCoord.y + paddleThickness;
-    var paddleBottom = singlePaddleCoord.y - paddleThickness;
-    var x = ballBottom > paddleTop || ballTop > paddleBottom;
-    console.log('x', x, singlePaddleCoord);
-    debugger;
-    return x;
+export function getRectanglePoints(coordinate, rectWidth, rectHeight) {
+    return {
+        minX: coordinate.x - rectWidth/2,
+        maxX: coordinate.x + rectWidth/2,
+        minY: coordinate.y - rectHeight/2,
+        maxY: coordinate.y + rectHeight/2
+    };
+}
+
+export function rectanglesIntersect(rect1, rect2) {
+    return !(
+        rect1.maxX < rect2.minX ||
+        rect1.minX > rect2.maxX ||
+        rect1.minY > rect2.maxY ||
+        rect1.maxY < rect2.minY
+    );
 }
