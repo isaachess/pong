@@ -26,7 +26,6 @@ var config = {
         loaders: [
             { test: /\.jsx?$/, loader: 'jsx-loader' },
             { test: /\.jsx?$/, exclude: [/node_modules/, /bower_components/], loader: '6to5-loader?experimental=true'},
-            { test: /\.less$/, loader: "style!css!less" },
         ]
     },
     plugins: [

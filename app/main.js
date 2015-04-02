@@ -1,6 +1,5 @@
 var React = require('react');
 var gameStateApi = require('./game-api/game-state.js');
-var css = require('./css/main.less');
 var Game = require('./Game.jsx');
 
 var initialGameState = gameStateApi.initialGameState();
