@@ -1,16 +1,15 @@
 var React = require('react');
-var gameState = require('./game-api/game-state.js');
+var gameStateApi = require('./game-api/game-state.js');
+var css = require('./css/main.less');
 var Game = require('./Game.jsx');
 
-var startBallInfo = gameState.startBallInfo();
-var paddleLocations = gameState.startPaddleInfo();
+var initialGameState = gameStateApi.initialGameState();
 
-tickAway(startBallInfo);
+tickAway(initialGameState);
 
-function tickAway(ballInfo) {
-    var newBallInfo = gameState.nextTick(ballInfo, paddleLocations);
-    console.log('newBallInfo', newBallInfo.ballLocation);
-    React.render(<Game gameState={newBallInfo}/>, document.body);
-    setTimeout(() => tickAway(newBallInfo), 300);
+function tickAway(gameState) {
+    React.render(<Game gameState={gameState}/>, document.body);
+    var nextGameState = gameStateApi.nextTick(gameState); // TODO: Send back keypresses so I can modify the paddle state based on what is pressed
+    setTimeout(() => tickAway(nextGameState), 10);
 }
 
