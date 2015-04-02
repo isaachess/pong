@@ -16,7 +16,6 @@ export function startPaddleInfo() {
     };
 }
 
-// TODO: Add parameter 'paddleLocations' to this to take into account
 export function nextTick(prevBallInfo, paddleInfo) {
     return calcNewBallInfo(prevBallInfo, paddleInfo);
 }
