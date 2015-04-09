@@ -1,6 +1,23 @@
 var constants = require('./constants.js');
 var vectors = require('./vectors.js');
 
+export function startPaddleInfo() {
+    return genericPaddleInfo({ x: 0, y: constants.WALL_LENGTH/2 }, { x: 0, y: -constants.WALL_LENGTH/2 });
+}
+
+export function genericPaddleInfo(player1Coord, player2Coord) {
+    return {
+        player1: player1Coord,
+        player2: player2Coord,
+    };
+}
+
+export function newPaddleLocations(oldPaddleInfo, paddleDirections) {
+    var player1Location = movePaddleCoordinate(oldPaddleInfo.player1, paddleDirections.player1);
+    var player2Location = movePaddleCoordinate(oldPaddleInfo.player2, paddleDirections.player2);
+    return genericPaddleInfo(player1Location, player2Location);
+}
+
 export function bounceVector(ballInfo) {
     // TODO: Check if bounce is off side wall or paddle; right now only bounces off paddle, which bounces x
     return vectors.bounceY(ballInfo.ballVector);
@@ -39,4 +56,10 @@ export function rectanglesIntersect(rect1, rect2) {
         rect1.minY > rect2.maxY ||
         rect1.maxY < rect2.minY
     );
+}
+
+function movePaddleCoordinate(coordinate, direction) {
+    if (!direction) return coordinate;
+    else if (direction == 'left') return vectors.subtractVectors(coordinate, constants.PADDLE_VECTOR);
+    else if (direction == 'right') return vectors.addVectors(coordinate, constants.PADDLE_VECTOR);
 }

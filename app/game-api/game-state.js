@@ -1,27 +1,19 @@
 var paddles = require('./paddles.js');
 var vectors = require('./vectors.js');
-var constants = require('./constants.js');
 
-export function nextTick(prevGameState) { // TODO: Add parameter to take keypresses
-    // TODO: Modify paddle locations before calculating the new ball info
-    return newGameState(prevGameState);
+export function nextTick(prevGameState, paddleDirections) {
+    console.log('nextTick', paddleDirections);
+    return newGameState(prevGameState, paddleDirections);
 }
 
 export function initialGameState() {
-    return genericGameState(startBallInfo(), startPaddleInfo());
+    return genericGameState(startBallInfo(), paddles.startPaddleInfo());
 }
 
 function startBallInfo() {
     return {
         ballLocation: { x: 0, y: 0 },
-        ballVector: { x: 0, y: 10 }
-    };
-}
-
-function startPaddleInfo() {
-    return {
-        player1: { x: 0, y: constants.WALL_LENGTH/2 },
-        player2: { x: 0, y: -constants.WALL_LENGTH/2 }
+        ballVector: { x: -1, y: 10 }
     };
 }
 
@@ -32,8 +24,9 @@ function genericGameState(ballInfo, paddleInfo) {
     };
 }
 
-function newGameState(prevGameState) {
-    var newPaddleInfo = prevGameState.paddleInfo; // TODO: Actually update paddle info based on keypresses
+function newGameState(prevGameState, paddleDirections) {
+    console.log('newGameState', paddleDirections);
+    var newPaddleInfo = paddles.newPaddleLocations(prevGameState.paddleInfo, paddleDirections);
     var newBallInfo = calcNewBallInfo(prevGameState.ballInfo, newPaddleInfo);
     return genericGameState(newBallInfo, newPaddleInfo);
 }

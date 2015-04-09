@@ -1,9 +1,16 @@
 var React = require('react');
+var $ = require('jquery');
 var constants = require('./game-api/constants.js');
-var actualWallLengthPx = 500;
-var conversionFactor = actualWallLengthPx/constants.WALL_LENGTH;
+var actualWallLengthScreenPx = 500;
+var conversionFactor = actualWallLengthScreenPx/constants.WALL_LENGTH;
 
-var Game = React.createClass({
+export var keypresses = blankKeypresses();
+
+export var Game = React.createClass({
+    componentDidMount: function() {
+        $(document.body).on('keydown', handleKeydown);
+        $(document.body).on('keyup', handleKeyup);
+    },
     render: function () {
         var gameBoardStyle = {
             width: gamePxToScreenPx(constants.WALL_LENGTH),
@@ -12,7 +19,6 @@ var Game = React.createClass({
             border: '1px solid green',
         };
         var gameState = this.props.gameState;
-        console.log('gameState', gameState);
         return (
             <div style={gameBoardStyle}>
                 <Ball ballInfo={gameState.ballInfo} />
@@ -58,7 +64,12 @@ var Paddle = React.createClass({
     }
 });
 
-module.exports = Game;
+function blankKeypresses() {
+    return {
+        player1: null,
+        player2: null,
+    };
+}
 
 function gamePxToScreenPx(gamePx) {
     return gamePx*conversionFactor;
@@ -66,4 +77,34 @@ function gamePxToScreenPx(gamePx) {
 
 function gameCoordToScreenCoord(gameCoord, thickness) {
     return gamePxToScreenPx(gameCoord + constants.WALL_LENGTH/2 - Number(thickness)/2);
+}
+
+function handleKeydown(e) {
+    switch(e.keyCode) {
+        case 65: // 'A'
+            return movePaddle('player1', 'left');
+        case 83: // 'S'
+            return movePaddle('player1', 'right');
+        case 75: // 'K'
+            return movePaddle('player2', 'left');
+        case 76: // 'L'
+            return movePaddle('player2', 'right');
+    }
+}
+
+function handleKeyup(e) {
+    switch(e.keyCode) {
+        case 65: // 'A'
+            return movePaddle('player1', null);
+        case 83: // 'S'
+            return movePaddle('player1', null);
+        case 75: // 'K'
+            return movePaddle('player2', null);
+        case 76: // 'L'
+            return movePaddle('player2', null);
+    }
+}
+
+function movePaddle(player, direction) {
+    keypresses[player] = direction;
 }
