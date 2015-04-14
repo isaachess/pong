@@ -2,7 +2,6 @@ var paddles = require('./paddles.js');
 var vectors = require('./vectors.js');
 
 export function nextTick(prevGameState, paddleDirections) {
-    console.log('nextTick', paddleDirections);
     return newGameState(prevGameState, paddleDirections);
 }
 
@@ -25,7 +24,6 @@ function genericGameState(ballInfo, paddleInfo) {
 }
 
 function newGameState(prevGameState, paddleDirections) {
-    console.log('newGameState', paddleDirections);
     var newPaddleInfo = paddles.newPaddleLocations(prevGameState.paddleInfo, paddleDirections);
     var newBallInfo = calcNewBallInfo(prevGameState.ballInfo, newPaddleInfo);
     return genericGameState(newBallInfo, newPaddleInfo);
