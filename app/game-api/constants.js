@@ -1,7 +1,7 @@
 export var BALL_DIAMETER = 100; // In game units
 export var WALL_LENGTH = 1000; // In game units
-export var PADDLE_THICKNESS = 100; // In game units
-export var PADDLE_WIDTH = 500; // In game units
+export var PADDLE_THICKNESS = 10; // In game units
+export var PADDLE_WIDTH = 100; // In game units
 export var PADDLE_VECTOR = { x: 10, y: 0 }; // In game units
 
 export var PaddleInfo = {

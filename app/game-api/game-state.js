@@ -13,7 +13,7 @@ export function initialGameState() {
 function startBallInfo() {
     return {
         ballLocation: { x: 0, y: 0 },
-        ballVector: { x: -1, y: 10 }
+        ballVector: { x: 1, y: 10 }
     };
 }
 
