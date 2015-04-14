@@ -11,6 +11,6 @@ function tickAway(gameState) {
     setTimeout(() => {
         var nextGameState = gameStateApi.nextTick(gameState, Game.keypresses);
         tickAway(nextGameState);
-    }, 10);
+    }, 30);
 }
 

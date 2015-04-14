@@ -1,4 +1,5 @@
 var paddles = require('./paddles.js');
+var walls = require('./walls.js');
 var vectors = require('./vectors.js');
 
 export function nextTick(prevGameState, paddleDirections) {
@@ -12,7 +13,7 @@ export function initialGameState() {
 function startBallInfo() {
     return {
         ballLocation: { x: 0, y: 0 },
-        ballVector: { x: 1, y: 10 }
+        ballVector: { x: 20, y: 10 }
     };
 }
 
@@ -43,8 +44,20 @@ function newBallInfo(ballLocation, ballVector) {
 }
 
 function newBallVector(oldBallInfo, paddleInfo) {
+
+    // Init the new vector as the origin vector
+    var newVector = oldBallInfo.ballVector;
+
+    // Modify new vector to bounce off paddles
     if (paddles.willBounce(oldBallInfo, paddleInfo)) {
-        return paddles.bounceVector(oldBallInfo);
+        newVector = paddles.bounceVector(newVector);
     }
-    else return oldBallInfo.ballVector;
+
+    // Modify new vector to bounce off walls
+    if (walls.willBounce(oldBallInfo)) {
+        console.log('willBounce wall');
+        newVector = walls.bounceVector(newVector);
+    }
+
+    return newVector;
 }

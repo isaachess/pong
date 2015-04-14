@@ -18,9 +18,9 @@ export function newPaddleLocations(oldPaddleInfo, paddleDirections) {
     return genericPaddleInfo(player1Location, player2Location);
 }
 
-export function bounceVector(ballInfo) {
+export function bounceVector(vectorToBounce) {
     // TODO: Check if bounce is off side wall or paddle; right now only bounces off paddle, which bounces x
-    return vectors.bounceY(ballInfo.ballVector);
+    return vectors.bounceY(vectorToBounce);
 }
 
 export function willBounce(ballInfo, paddleInfo) {
@@ -35,27 +35,9 @@ function locationHitsAnyPaddle(location, paddleInfo) {
 }
 
 function locationHitsOnePaddle(location, singlePaddleCoord) {
-    var ballRect = getRectanglePoints(location, constants.BALL_DIAMETER, constants.BALL_DIAMETER);
-    var paddleRect = getRectanglePoints(singlePaddleCoord, constants.PADDLE_WIDTH, constants.PADDLE_THICKNESS);
-    return rectanglesIntersect(ballRect, paddleRect);
-}
-
-export function getRectanglePoints(coordinate, rectWidth, rectHeight) {
-    return {
-        minX: coordinate.x - rectWidth/2,
-        maxX: coordinate.x + rectWidth/2,
-        minY: coordinate.y - rectHeight/2,
-        maxY: coordinate.y + rectHeight/2
-    };
-}
-
-export function rectanglesIntersect(rect1, rect2) {
-    return !(
-        rect1.maxX < rect2.minX ||
-        rect1.minX > rect2.maxX ||
-        rect1.minY > rect2.maxY ||
-        rect1.maxY < rect2.minY
-    );
+    var ballRect = vectors.getRectanglePoints(location, constants.BALL_DIAMETER, constants.BALL_DIAMETER);
+    var paddleRect = vectors.getRectanglePoints(singlePaddleCoord, constants.PADDLE_WIDTH, constants.PADDLE_THICKNESS);
+    return vectors.rectanglesIntersect(ballRect, paddleRect);
 }
 
 function movePaddleCoordinate(coordinate, direction) {
