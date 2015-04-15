@@ -18,24 +18,34 @@ export function newPaddleLocations(oldPaddleInfo, paddleDirections) {
     return genericPaddleInfo(player1Location, player2Location);
 }
 
-export function bounceVector(vectorToBounce) {
-    // TODO: Check if bounce is off side wall or paddle; right now only bounces off paddle, which bounces x
-    return vectors.bounceY(vectorToBounce);
+export function bounceOffPaddles(vectorToBounce, potentialLocation, paddleInfo) {
+    var ballRect = vectors.getRectanglePoints(potentialLocation, constants.BALL_DIAMETER, constants.BALL_DIAMETER);
+    if (hitsPlayer1Paddle(ballRect, paddleInfo)) {
+        return bounceVector(vectorToBounce, potentialLocation, paddleInfo.player1);
+    }
+    else if (hitsPlayer2Paddle(ballRect, paddleInfo)) {
+        return bounceVector(vectorToBounce, potentialLocation, paddleInfo.player2);
+    }
+    else {
+        // If it hits neither paddle, just retun unbounced vector
+        return vectorToBounce;
+    }
 }
 
-export function willBounce(ballInfo, paddleInfo) {
-    var potentialLocation = vectors.addVectors(ballInfo.ballLocation, ballInfo.ballVector);
-    return locationHitsAnyPaddle(potentialLocation, paddleInfo);
+function bounceVector(vectorToBounce, potentialLocation, singlePaddleCoord) {
+        var modifiedVector = alterForPaddleLocation(vectorToBounce, potentialLocation, singlePaddleCoord);
+        return vectors.bounceY(modifiedVector);
 }
 
-function locationHitsAnyPaddle(location, paddleInfo) {
-    var hitsPlayer1 = locationHitsOnePaddle(location, paddleInfo.player1);
-    var hitsPlayer2 = locationHitsOnePaddle(location, paddleInfo.player2);
-    return hitsPlayer1 || hitsPlayer2;
+function hitsPlayer1Paddle(ballRect, paddleInfo) {
+    return ballHitsOnePaddle(ballRect, paddleInfo.player1);
 }
 
-function locationHitsOnePaddle(location, singlePaddleCoord) {
-    var ballRect = vectors.getRectanglePoints(location, constants.BALL_DIAMETER, constants.BALL_DIAMETER);
+function hitsPlayer2Paddle(ballRect, paddleInfo) {
+    return ballHitsOnePaddle(ballRect, paddleInfo.player2);
+}
+
+function ballHitsOnePaddle(ballRect, singlePaddleCoord) {
     var paddleRect = vectors.getRectanglePoints(singlePaddleCoord, constants.PADDLE_WIDTH, constants.PADDLE_THICKNESS);
     return vectors.rectanglesIntersect(ballRect, paddleRect);
 }
@@ -44,4 +54,10 @@ function movePaddleCoordinate(coordinate, direction) {
     if (!direction) return coordinate;
     else if (direction == 'left') return vectors.subtractVectors(coordinate, constants.PADDLE_VECTOR);
     else if (direction == 'right') return vectors.addVectors(coordinate, constants.PADDLE_VECTOR);
+}
+
+function alterForPaddleLocation(vector, ballLocation, singlePaddleCoord) {
+    var ballPercentDistanceFromPaddleCenter = (ballLocation.x - singlePaddleCoord.x) / constants.PADDLE_WIDTH / 2; // Divide by two at end because we are dealing with center points
+    vector.x = ballPercentDistanceFromPaddleCenter * constants.BALL_VELOCITY;
+    return vector;
 }

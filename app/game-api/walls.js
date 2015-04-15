@@ -1,12 +1,16 @@
 var constants = require('./constants.js');
 var vectors = require('./vectors.js');
 
-export function willBounce(ballInfo) {
-    var potentialLocation = vectors.addVectors(ballInfo.ballLocation, ballInfo.ballVector);
-    return locationHitsAnyWall(potentialLocation);
+export function bounceOffWalls(vectorToBounce, potentialLocation) {
+    if (locationHitsAnyWall(potentialLocation)) {
+        return bounceVector(vectorToBounce);
+    }
+    else {
+        return vectorToBounce;
+    }
 }
 
-export function bounceVector(vectorToBounce) {
+function bounceVector(vectorToBounce) {
     return vectors.bounceX(vectorToBounce);
 }
 

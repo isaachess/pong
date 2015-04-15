@@ -1,8 +1,10 @@
-export var BALL_DIAMETER = 100; // In game units
-export var WALL_LENGTH = 1000; // In game units
-export var PADDLE_THICKNESS = 10; // In game units
-export var PADDLE_WIDTH = 100; // In game units
-export var PADDLE_VECTOR = { x: 10, y: 0 }; // In game units
+// All constants in game units
+export var BALL_DIAMETER = 100;
+export var BALL_VELOCITY = 10;
+export var WALL_LENGTH = 1000;
+export var PADDLE_THICKNESS = 10;
+export var PADDLE_WIDTH = 300;
+export var PADDLE_VECTOR = { x: 10, y: 0 };
 
 export var PaddleInfo = {
     player1: Coordinate, // Center of the paddle

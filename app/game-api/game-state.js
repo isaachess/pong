@@ -1,4 +1,5 @@
 var paddles = require('./paddles.js');
+var constants = require('./constants.js');
 var walls = require('./walls.js');
 var vectors = require('./vectors.js');
 
@@ -13,7 +14,7 @@ export function initialGameState() {
 function startBallInfo() {
     return {
         ballLocation: { x: 0, y: 0 },
-        ballVector: { x: 20, y: 10 }
+        ballVector: { x: 0, y: constants.BALL_VELOCITY }
     };
 }
 
@@ -31,7 +32,8 @@ function newGameState(prevGameState, paddleDirections) {
 }
 
 function calcNewBallInfo(oldBallInfo, paddleInfo) {
-    var newVector = newBallVector(oldBallInfo, paddleInfo);
+    var potentialLocation = vectors.addVectors(oldBallInfo.ballLocation, oldBallInfo.ballVector);
+    var newVector = newBallVector(oldBallInfo, paddleInfo, potentialLocation);
     var newLocation = vectors.addVectors(oldBallInfo.ballLocation, newVector);
     return newBallInfo(newLocation, newVector);
 }
@@ -43,21 +45,10 @@ function newBallInfo(ballLocation, ballVector) {
     };
 }
 
-function newBallVector(oldBallInfo, paddleInfo) {
-
+function newBallVector(oldBallInfo, paddleInfo, potentialLocation) {
     // Init the new vector as the origin vector
     var newVector = oldBallInfo.ballVector;
-
-    // Modify new vector to bounce off paddles
-    if (paddles.willBounce(oldBallInfo, paddleInfo)) {
-        newVector = paddles.bounceVector(newVector);
-    }
-
-    // Modify new vector to bounce off walls
-    if (walls.willBounce(oldBallInfo)) {
-        console.log('willBounce wall');
-        newVector = walls.bounceVector(newVector);
-    }
-
+    newVector = paddles.bounceOffPaddles(newVector, potentialLocation, paddleInfo);
+    newVector = walls.bounceOffWalls(newVector, potentialLocation);
     return newVector;
 }
