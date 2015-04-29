@@ -52,8 +52,26 @@ function ballHitsOnePaddle(ballRect, singlePaddleCoord) {
 
 function movePaddleCoordinate(coordinate, direction) {
     if (!direction) return coordinate;
-    else if (direction == 'left') return vectors.subtractVectors(coordinate, constants.PADDLE_VECTOR);
-    else if (direction == 'right') return vectors.addVectors(coordinate, constants.PADDLE_VECTOR);
+    else if (direction == 'left') return movePaddleLeft(coordinate);
+    else if (direction == 'right') return movePaddleRight(coordinate);
+}
+
+function movePaddleLeft(coordinate) {
+    var amountToMove = (isPaddleAtLeftEdge(coordinate)) ? { x: 0, y: 0 } : constants.PADDLE_VECTOR;
+    return vectors.subtractVectors(coordinate, amountToMove);
+}
+
+function movePaddleRight(coordinate) {
+    var amountToMove = (isPaddleAtRightEdge(coordinate)) ? { x: 0, y: 0 } : constants.PADDLE_VECTOR;
+    return vectors.addVectors(coordinate, amountToMove);
+}
+
+function isPaddleAtLeftEdge(coordinate) {
+    return coordinate.x - constants.PADDLE_WIDTH/2 <= -constants.WALL_LENGTH/2;
+}
+
+function isPaddleAtRightEdge(coordinate) {
+    return coordinate.x + constants.PADDLE_WIDTH/2 >= constants.WALL_LENGTH/2;
 }
 
 function alterForPaddleLocation(vector, ballLocation, singlePaddleCoord) {
