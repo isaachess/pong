@@ -1,5 +1,4 @@
 var paddles = require('./paddles.js');
-var constants = require('./constants.js');
 var walls = require('./walls.js');
 var vectors = require('./vectors.js');
 
@@ -14,7 +13,7 @@ export function initialGameState() {
 function startBallInfo() {
     return {
         ballLocation: { x: 0, y: 0 },
-        ballVector: { x: 0, y: constants.BALL_VELOCITY }
+        ballVector: { x: 0, y: 10 }
     };
 }
 

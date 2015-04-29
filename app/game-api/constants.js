@@ -1,9 +1,9 @@
 // All constants in game units
 export var BALL_DIAMETER = 100;
-export var BALL_VELOCITY = 10;
 export var WALL_LENGTH = 1000;
 export var PADDLE_THICKNESS = 10;
 export var PADDLE_WIDTH = 300;
+export var SMALLEST_ANGLE = 25;
 export var PADDLE_VECTOR = { x: 10, y: 0 };
 
 export var PaddleInfo = {
