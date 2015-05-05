@@ -11,13 +11,9 @@ export function getGameState() {
 }
 
 function runGame() {
-    var newState = nextTick(gameState);
+    var newState = nextTick(gameState, paddles.keypresses);
     gameState = newState;
     setTimeout(() => runGame(), 10);
-}
-
-function nextTick(prevGameState) {
-    return newGameState(prevGameState, paddles.keypresses);
 }
 
 function initialGameState() {
@@ -35,7 +31,7 @@ function genericGameState(ballInfo, paddleInfo) {
     };
 }
 
-function newGameState(prevGameState, paddleDirections) {
+function nextTick(prevGameState, paddleDirections) {
     var newPaddleInfo = paddles.newPaddleLocations(prevGameState.paddleInfo, paddleDirections);
     var newBallInfo = ball.newBallInfo(prevGameState.ballInfo, newPaddleInfo);
     return genericGameState(newBallInfo, newPaddleInfo);
