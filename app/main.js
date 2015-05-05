@@ -6,6 +6,6 @@ tickAway();
 
 function tickAway() {
     React.render(<Game.Game gameState={gameStateApi.getGameState()}/>, document.body);
-    setTimeout(() => tickAway(), 40);
+    setTimeout(() => tickAway(), 30);
 }
 
