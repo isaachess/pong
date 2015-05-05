@@ -9,7 +9,7 @@ tickAway(initialGameState);
 function tickAway(gameState) {
     React.render(<Game.Game gameState={gameState}/>, document.body);
     setTimeout(() => {
-        var nextGameState = gameStateApi.nextTick(gameState, Game.keypresses);
+        var nextGameState = gameStateApi.nextTick(gameState);
         tickAway(nextGameState);
     }, 20);
 }

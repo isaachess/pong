@@ -1,12 +1,18 @@
 var paddles = require('./paddles.js');
 var ball = require('./ball.js');
 
-export function nextTick(prevGameState, paddleDirections) {
-    return newGameState(prevGameState, paddleDirections);
+initGameSetup();
+
+export function nextTick(prevGameState) {
+    return newGameState(prevGameState, paddles.keypresses);
 }
 
 export function initialGameState() {
     return genericGameState(ball.startBallInfo(), paddles.startPaddleInfo());
+}
+
+function initGameSetup() {
+    paddles.attachKeyListeners();
 }
 
 function genericGameState(ballInfo, paddleInfo) {
