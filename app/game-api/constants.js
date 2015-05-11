@@ -6,6 +6,26 @@ export var PADDLE_WIDTH = 150;
 export var SMALLEST_ANGLE = 25;
 export var PADDLE_VECTOR = { x: 6, y: 0 };
 
+export var GameState = {
+    ballInfo: BallInfo,
+    paddleInfo: PaddleInfo,
+    score: Score,
+    message: '',
+    currentState: CurrentState,
+};
+
+export var Score = {
+    player1: 0,
+    player2: 0,
+};
+
+export var CurrentState = {
+    Beginning: 0,
+    InPlay: 1,
+    BetweenPlay: 2,
+    End: 3,
+};
+
 export var PaddleInfo = {
     player1: Coordinate, // Center of the paddle
     player2: Coordinate
