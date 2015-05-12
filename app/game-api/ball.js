@@ -1,9 +1,11 @@
 var walls = require('./walls.js');
+var _ = require('lodash');
 var vectors = require('./vectors.js');
 var paddles = require('./paddles.js');
 
 export function startBallInfo() {
-    return genericBallInfo({x: 0, y: 0}, {x: 0, y: 10});
+    var ballDirection = (_.random() <= 0.5) ? 1 : -1;
+    return genericBallInfo({x: 0, y: 0}, {x: 0, y: 10*ballDirection});
 }
 
 export function newBallInfo(oldBallInfo, paddleInfo) {

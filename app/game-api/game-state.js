@@ -6,13 +6,21 @@ var score = require('./score.js');
 var gameState = initialGameState();
 
 initGameSetup();
-runGame();
 
 export function getGameState() {
     return gameState;
 }
 
+export function startGame() {
+    if (gameState.currentState == cst.CurrentState.Beginning) {
+        runGame();
+    } else {
+        gameState = { error: 'Game state is not at the beginning -- cannot start game.' };
+    }
+}
+
 function runGame() {
+    gameState.currentState = cst.CurrentState.InPlay;
     var newState = nextTick(gameState, paddles.keypresses);
     gameState = newState;
     setTimeout(() => runGame(), 10);
