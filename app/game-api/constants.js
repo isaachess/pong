@@ -5,6 +5,7 @@ export var PADDLE_THICKNESS = 10;
 export var PADDLE_WIDTH = 150;
 export var SMALLEST_ANGLE = 25;
 export var PADDLE_VECTOR = { x: 6, y: 0 };
+export var MAX_POINTS = 5;
 
 export var GameState = {
     ballInfo: BallInfo,
@@ -17,6 +18,7 @@ export var GameState = {
 export var Score = {
     player1: 0,
     player2: 0,
+    lastScorer: '' // Acceptable values are 'player1' and 'player2'
 };
 
 export var CurrentState = {

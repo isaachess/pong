@@ -63,10 +63,11 @@ var Paddle = React.createClass({
 var GameInfo = React.createClass({
     render: function() {
         var currentState = this.props.currentState;
+        var api = this.props.api;
         if (currentState == cst.CurrentState.InPlay) {
             return null;
         } else if (currentState == cst.CurrentState.Beginning) {
-            return <GameInfoBeginning keyHandler={handleKeyDown(this.props.api.startGame)} />;
+            return <GameInfoBeginning keyHandler={handleKeyDown(api.startGame)} />;
         } else if (currentState == cst.CurrentState.BetweenPlay) {
             return <GameInfoBetweenPlay />;
         } else if (currentState == cst.CurrentState.End) {

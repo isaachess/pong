@@ -8,8 +8,7 @@ export function startBallInfo() {
     return genericBallInfo({x: 0, y: 0}, {x: 0, y: 10*ballDirection});
 }
 
-export function newBallInfo(oldBallInfo, paddleInfo) {
-    var potentialLocation = vectors.addVectors(oldBallInfo.ballLocation, oldBallInfo.ballVector);
+export function newBallInfo(oldBallInfo, paddleInfo, potentialLocation) {
     var newVector = newBallVector(oldBallInfo, paddleInfo, potentialLocation);
     var newLocation = vectors.addVectors(oldBallInfo.ballLocation, newVector);
     return genericBallInfo(newLocation, newVector);
