@@ -19,7 +19,7 @@ export var Game = React.createClass({
                 <Ball ballInfo={gameState.ballInfo} />
                 <Paddle paddleInfo={gameState.paddleInfo.player1} />
                 <Paddle paddleInfo={gameState.paddleInfo.player2} />
-                <GameInfo currentState={gameState.currentState} api={api} />
+                <GameInfo gameState={gameState} api={api} />
             </div>
         );
     }
@@ -62,23 +62,29 @@ var Paddle = React.createClass({
 
 var GameInfo = React.createClass({
     render: function() {
-        var currentState = this.props.currentState;
+        var keyHandler, message;
+        var gameState = this.props.gameState;
+        var currentState = gameState.currentState;
         var api = this.props.api;
         if (currentState == cst.CurrentState.InPlay) {
             return null;
         } else if (currentState == cst.CurrentState.Beginning) {
-            return <GameInfoBeginning keyHandler={handleKeyDown(api.startGame)} />;
+            keyHandler = handleKeyDown(api.startGame);
+            message = 'Press enter to begin.';
         } else if (currentState == cst.CurrentState.BetweenPlay) {
-            return <GameInfoBetweenPlay />;
+            keyHandler = handleKeyDown(api.resumeGame);
+            message = gameState.score.lastScorer + ' scores! Press enter to continue.';
         } else if (currentState == cst.CurrentState.End) {
-            return <GameInfoEnd />;
+            keyHandler = handleKeyDown(api.restartGame);
+            message = 'Game over! Who won?';
         } else {
             throw new Error('Cannot match CurrentState to any GameInfo to render.');
         }
+        return <GameInfoAction keyHandler={keyHandler} message={message} />;
     }
 });
 
-var GameInfoBeginning = React.createClass({
+var GameInfoAction = React.createClass({
     componentDidMount: function() {
         $(document.body).on('keydown', this.props.keyHandler);
     },
@@ -86,6 +92,7 @@ var GameInfoBeginning = React.createClass({
         $(document.body).off('keydown', this.props.keyHandler);
     },
     render: function() {
+        var message = this.props.message;
         var distanceFromEdge = 0.15*actualWallLengthScreenPx;
         var gameInfoStyle = {
             position: 'absolute',
@@ -96,7 +103,7 @@ var GameInfoBeginning = React.createClass({
             border: "1px solid red",
         };
         return (
-            <div style={gameInfoStyle}>Hey bob!</div>
+            <div style={gameInfoStyle}>{message}</div>
         );
     }
 });

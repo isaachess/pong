@@ -4,8 +4,7 @@ var cst = require('./constants.js');
 var score = require('./score.js');
 var vectors = require('./vectors.js');
 
-var gameState = initialGameState();
-
+var gameState;
 initGameSetup();
 
 export function getGameState() {
@@ -21,6 +20,20 @@ export function startGame() {
     }
 }
 
+export function resumeGame() {
+    if (gameState.currentState == cst.CurrentState.BetweenPlay) {
+        gameState = genericGameState(cst.CurrentState.InPlay, ball.startBallInfo(), paddles.startPaddleInfo(), gameState.score);
+        runGame();
+    } else {
+        gameState = { error: 'Game state is not between play -- cannot resume game.' };
+    }
+}
+
+export function restartGame() {
+    // Restart can be called at any time -- simply restarts the game
+    gameState = initialGameState();
+}
+
 function runGame() {
     var newState = nextTick(gameState, paddles.keypresses);
     gameState = newState;
@@ -34,6 +47,7 @@ function initialGameState() {
 }
 
 function initGameSetup() {
+    restartGame();
     paddles.attachKeyListeners();
 }
 

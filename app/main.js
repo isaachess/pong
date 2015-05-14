@@ -4,7 +4,9 @@ var cst = require('./game-api/constants.js');
 var Game = require('./Game.jsx');
 
 var apiMethods = {
-    startGame: startGame,
+    startGame: renderWithApi(gameStateApi.startGame),
+    resumeGame: renderWithApi(gameStateApi.resumeGame),
+    restartGame: renderWithApi(gameStateApi.restartGame),
 };
 
 // Render game once to begin
@@ -24,7 +26,9 @@ function renderGame(gameState) {
     React.render(<Game.Game gameState={gameState} api={apiMethods}/>, document.body);
 }
 
-function startGame() {
-    gameStateApi.startGame();
-    tickAway();
+function renderWithApi(apiCall) {
+    return function () {
+        apiCall();
+        tickAway();
+    };
 }
