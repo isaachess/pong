@@ -17,7 +17,7 @@ export function newScoreInfo(prevScore, potentialBallLocation) {
 }
 
 export function currentStatePerScore(oldScoreInfo, newScoreInfo) {
-    if (newScoreInfo.player1 == cst.MAX_POINTS) {
+    if (anyPlayerWillWin(newScoreInfo)) {
         return cst.CurrentState.End;
     } else if (oldScoreInfo != newScoreInfo) {
         return cst.CurrentState.BetweenPlay;
@@ -47,4 +47,8 @@ function playerWillScore(potentialBallLocation) {
     } else {
         return null;
     }
+}
+
+function anyPlayerWillWin(newScoreInfo) {
+    return newScoreInfo.player1 == cst.MAX_POINTS || newScoreInfo.player2 == cst.MAX_POINTS;
 }

@@ -20,6 +20,7 @@ export var Game = React.createClass({
                 <Paddle paddleInfo={gameState.paddleInfo.player1} />
                 <Paddle paddleInfo={gameState.paddleInfo.player2} />
                 <GameInfo gameState={gameState} api={api} />
+                <Score score={gameState.score} />
             </div>
         );
     }
@@ -104,6 +105,24 @@ var GameInfoAction = React.createClass({
         };
         return (
             <div style={gameInfoStyle}>{message}</div>
+        );
+    }
+});
+
+var Score = React.createClass({
+    render: function() {
+        var score = this.props.score;
+        var scoreStyle = {
+            position: 'absolute',
+            right: '-140px',
+            width: '125px',
+            height: '50px',
+        };
+        return (
+            <div style={scoreStyle}>
+                <div>Player 1: {score.player1}</div>
+                <div>Player 2: {score.player2}</div>
+            </div>
         );
     }
 });
