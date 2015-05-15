@@ -18,7 +18,7 @@ function tickAway() {
     var gameState = gameStateApi.getGameState();
     renderGame(gameState);
     if (gameState.currentState == cst.CurrentState.InPlay) {
-        setTimeout(() => tickAway(), 30);
+        setTimeout(() => tickAway(), 20);
     }
 }
 

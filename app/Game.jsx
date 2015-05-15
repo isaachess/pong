@@ -1,7 +1,7 @@
 var React = require('react');
 var $ = require('jquery');
 var cst = require('./game-api/constants.js');
-var actualWallLengthScreenPx = 500;
+var actualWallLengthScreenPx = 800;
 var conversionFactor = actualWallLengthScreenPx/cst.WALL_LENGTH;
 
 export var Game = React.createClass({
@@ -63,7 +63,7 @@ var Paddle = React.createClass({
 
 var GameInfo = React.createClass({
     render: function() {
-        var keyHandler, message;
+        var keyHandler, message, key;
         var gameState = this.props.gameState;
         var currentState = gameState.currentState;
         var api = this.props.api;
@@ -71,17 +71,20 @@ var GameInfo = React.createClass({
             return null;
         } else if (currentState == cst.CurrentState.Beginning) {
             keyHandler = handleKeyDown(api.startGame);
+            key = cst.CurrentState.Beginning;
             message = 'Press enter to begin.';
         } else if (currentState == cst.CurrentState.BetweenPlay) {
             keyHandler = handleKeyDown(api.resumeGame);
+            key = cst.CurrentState.BetweenPlay;
             message = gameState.score.lastScorer + ' scores! Press enter to continue.';
         } else if (currentState == cst.CurrentState.End) {
             keyHandler = handleKeyDown(api.restartGame);
+            key = cst.CurrentState.End;
             message = 'Game over! Who won?';
         } else {
             throw new Error('Cannot match CurrentState to any GameInfo to render.');
         }
-        return <GameInfoAction keyHandler={keyHandler} message={message} />;
+        return <GameInfoAction key={key} keyHandler={keyHandler} message={message} />;
     }
 });
 
