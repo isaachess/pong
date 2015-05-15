@@ -1,6 +1,6 @@
 // All constants in game units
-export var BALL_DIAMETER = 100;
-export var WALL_LENGTH = 1000;
+export var BALL_DIAMETER = 50;
+export var WALL_LENGTH = 700;
 export var PADDLE_THICKNESS = 10;
 export var PADDLE_WIDTH = 150;
 export var SMALLEST_ANGLE = 25;
