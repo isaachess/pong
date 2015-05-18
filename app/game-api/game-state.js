@@ -38,7 +38,7 @@ function runGame() {
     var newState = nextTick(gameState, paddles.keypresses);
     gameState = newState;
     if (gameState.currentState == cst.CurrentState.InPlay) {
-        setTimeout(() => runGame(), 10);
+        setTimeout(() => runGame(), 40);
     }
 }
 

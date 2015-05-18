@@ -1,4 +1,4 @@
-var constants = require('./constants.js');
+var cst = require('./constants.js');
 var vectors = require('./vectors.js');
 var $ = require('jquery');
 
@@ -10,7 +10,9 @@ export function attachKeyListeners() {
 }
 
 export function startPaddleInfo() {
-    return genericPaddleInfo({ x: 0, y: constants.WALL_LENGTH/2 }, { x: 0, y: -constants.WALL_LENGTH/2 });
+    var player1 = { x: 0, y: cst.WALL_LENGTH/2 + cst.PADDLE_THICKNESS/2 };
+    var player2 = { x: 0, y: -(cst.WALL_LENGTH/2 + cst.PADDLE_THICKNESS/2) };
+    return genericPaddleInfo(player1, player2);
 }
 
 export function genericPaddleInfo(player1Coord, player2Coord) {
@@ -27,14 +29,12 @@ export function newPaddleLocations(oldPaddleInfo, paddleDirections) {
 }
 
 export function bounceOffPaddles(vectorToBounce, potentialLocation, paddleInfo) {
-    var ballRect = vectors.getRectanglePoints(potentialLocation, constants.BALL_DIAMETER, constants.BALL_DIAMETER);
-    if (hitsPlayer1Paddle(ballRect, paddleInfo)) {
+    var ballRect = vectors.getRectanglePoints(potentialLocation, cst.BALL_DIAMETER, cst.BALL_DIAMETER);
+    if (ballHitsOnePaddle(ballRect, paddleInfo.player1)) {
         return bounceVector(vectorToBounce, potentialLocation, paddleInfo.player1);
-    }
-    else if (hitsPlayer2Paddle(ballRect, paddleInfo)) {
+    } else if (ballHitsOnePaddle(ballRect, paddleInfo.player2)) {
         return bounceVector(vectorToBounce, potentialLocation, paddleInfo.player2);
-    }
-    else {
+    } else {
         // If it hits neither paddle, just retun unbounced vector
         return vectorToBounce;
     }
@@ -45,16 +45,8 @@ function bounceVector(vectorToBounce, potentialLocation, singlePaddleCoord) {
     return vectors.bounceY(modifiedVector);
 }
 
-function hitsPlayer1Paddle(ballRect, paddleInfo) {
-    return ballHitsOnePaddle(ballRect, paddleInfo.player1);
-}
-
-function hitsPlayer2Paddle(ballRect, paddleInfo) {
-    return ballHitsOnePaddle(ballRect, paddleInfo.player2);
-}
-
 function ballHitsOnePaddle(ballRect, singlePaddleCoord) {
-    var paddleRect = vectors.getRectanglePoints(singlePaddleCoord, constants.PADDLE_WIDTH, constants.PADDLE_THICKNESS);
+    var paddleRect = vectors.getRectanglePoints(singlePaddleCoord, cst.PADDLE_WIDTH, cst.PADDLE_THICKNESS);
     return vectors.rectanglesIntersect(ballRect, paddleRect);
 }
 
@@ -65,27 +57,27 @@ function movePaddleCoordinate(coordinate, direction) {
 }
 
 function movePaddleLeft(coordinate) {
-    var amountToMove = (isPaddleAtLeftEdge(coordinate)) ? { x: 0, y: 0 } : constants.PADDLE_VECTOR;
+    var amountToMove = (isPaddleAtLeftEdge(coordinate)) ? { x: 0, y: 0 } : cst.PADDLE_VECTOR;
     return vectors.subtractVectors(coordinate, amountToMove);
 }
 
 function movePaddleRight(coordinate) {
-    var amountToMove = (isPaddleAtRightEdge(coordinate)) ? { x: 0, y: 0 } : constants.PADDLE_VECTOR;
+    var amountToMove = (isPaddleAtRightEdge(coordinate)) ? { x: 0, y: 0 } : cst.PADDLE_VECTOR;
     return vectors.addVectors(coordinate, amountToMove);
 }
 
 function isPaddleAtLeftEdge(coordinate) {
-    return coordinate.x - constants.PADDLE_WIDTH/2 <= -constants.WALL_LENGTH/2;
+    return coordinate.x - cst.PADDLE_WIDTH/2 <= -cst.WALL_LENGTH/2;
 }
 
 function isPaddleAtRightEdge(coordinate) {
-    return coordinate.x + constants.PADDLE_WIDTH/2 >= constants.WALL_LENGTH/2;
+    return coordinate.x + cst.PADDLE_WIDTH/2 >= cst.WALL_LENGTH/2;
 }
 
 function alterForPaddleLocation(vector, ballLocation, singlePaddleCoord) {
     var yAdjuster = (singlePaddleCoord.y > 0) ? 1 : -1;
-    var ballPercentDistanceFromPaddleCenter = (ballLocation.x - singlePaddleCoord.x) / (constants.PADDLE_WIDTH/2 + constants.BALL_DIAMETER/2); // Divide by two at end because we are dealing with center points
-    var baseAngle = 90 - (90 - constants.SMALLEST_ANGLE)*Math.abs(ballPercentDistanceFromPaddleCenter);
+    var ballPercentDistanceFromPaddleCenter = (ballLocation.x - singlePaddleCoord.x) / (cst.PADDLE_WIDTH/2 + cst.BALL_DIAMETER/2); // Divide by two at end because we are dealing with center points
+    var baseAngle = 90 - (90 - cst.SMALLEST_ANGLE)*Math.abs(ballPercentDistanceFromPaddleCenter);
     var angleToUse = (ballPercentDistanceFromPaddleCenter > 0) ? baseAngle : 180 - baseAngle; // Adjust for whether is left or right side of paddle
     var angleInRadians = vectors.degreesToRadians(angleToUse);
     var magnitude = Math.sqrt(vector.x*vector.x + vector.y*vector.y);
