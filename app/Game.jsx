@@ -1,6 +1,7 @@
 var styles = require('./styles.js');
 var React = require('react');
 var $ = require('jquery');
+var _ = require('lodash');
 var cst = require('./game-api/constants.js');
 
 export var Info = React.createClass({
@@ -9,8 +10,8 @@ export var Info = React.createClass({
         var api = this.props.api;
         return (
             <div>
-                <Score score={gameState.score.player1} player='player1' />
-                <Score score={gameState.score.player2} player='player2' />
+                <Score score={gameState.score.player1} currentState={gameState.currentState} player='player1' />
+                <Score score={gameState.score.player2} currentState={gameState.currentState} player='player2' />
                 <GameInfo gameState={gameState} api={api} />
             </div>
         );
@@ -33,12 +34,13 @@ var GameInfo = React.createClass({
         } else if (currentState == cst.CurrentState.BetweenPlay) {
             keyHandler = handleKeyDown(api.resumeGame);
             key = cst.CurrentState.BetweenPlay;
-            largeMessage = gameState.score.lastScorer + ' scores!';
+            largeMessage = formattedPlayerString(gameState.score.lastScorer) + ' scores!';
             instruction = 'Press enter to continue.';
         } else if (currentState == cst.CurrentState.End) {
+            var winner = winnerFromScore(gameState.score);
             keyHandler = handleKeyDown(api.restartGame);
             key = cst.CurrentState.End;
-            largeMessage = 'Someone wins!';
+            largeMessage = formattedPlayerString(winner)+' wins!';
             instruction = 'Press enter to play again.';
         } else {
             throw new Error('Cannot match CurrentState to any GameInfo to render.');
@@ -64,10 +66,10 @@ var GameInfoAction = React.createClass({
             bottom: distanceFromEdge,
             left: distanceFromEdge,
             right: distanceFromEdge,
-            border: "20px solid "+styles.whiteColor,
-            backgroundColor: styles.grayColor,
+            border: "20px solid "+styles.white,
+            backgroundColor: styles.gray,
             fontFamily: 'VT323',
-            color: styles.whiteColor,
+            color: styles.white,
         };
         var largeMessageStyle = {
             padding: '30px 0',
@@ -90,20 +92,45 @@ var GameInfoAction = React.createClass({
 var Score = React.createClass({
     render: function() {
         var score = this.props.score;
-        var scoreStyle = {
+        var player = this.props.player;
+        var currentState = this.props.currentState;
+        var scoreDistance = '10px';
+        var scoreLocation = (player == 'player1') ? {top: scoreDistance} : {bottom: scoreDistance};
+        var scoreColor = (currentState == cst.CurrentState.InPlay) ? styles.lightGray : styles.white;
+        var scoreStyle = _.merge({
             position: 'absolute',
-            right: '-140px',
-            width: '125px',
-            height: '50px',
-        };
+            left: 10,
+            color: scoreColor,
+            fontFamily: 'VT323',
+            fontSize: '30px',
+        }, scoreLocation);
         return (
             <div style={scoreStyle}>
-                <div>Player 1: {score.player1}</div>
-                <div>Player 2: {score.player2}</div>
+                <div>{formattedPlayerString(player)}: {score}</div>
             </div>
         );
     }
 });
+
+function formattedPlayerString(playerString) {
+    if (playerString == 'player1') {
+        return 'Player 1';
+    } else if (playerString == 'player2') {
+        return 'Player 2';
+    } else {
+        throw new Error('Cannot get player string for player: '+playerString);
+    }
+}
+
+function winnerFromScore(scoreInfo) {
+    if (scoreInfo.player1 == cst.MAX_POINTS) {
+        return 'player1';
+    } else if (scoreInfo.player2 == cst.MAX_POINTS) {
+        return 'player2';
+    } else {
+        throw new Error('Cannot find winner for this score: '+scoreInfo);
+    }
+}
 
 function handleKeyDown(methodForKeyDown) {
     return function(e) {

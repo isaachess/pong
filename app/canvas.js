@@ -19,14 +19,14 @@ function board(ctx) {
     ctx.clip();
 
     ctx.beginPath();
-    ctx.fillStyle = styles.grayColor;
+    ctx.fillStyle = styles.gray;
     ctx.fillRect(0, 0, canvasWallLength, canvasWallLength);
 }
 
 function ball(ctx, ballInfo) {
     var ballLocation = gameCoordToCanvasCoord(ballInfo.ballLocation, 0, 0);
     ctx.beginPath();
-    ctx.fillStyle = styles.whiteColor;
+    ctx.fillStyle = styles.white;
     ctx.arc(ballLocation.x, ballLocation.y, gamePxToCanvasPx(cst.BALL_DIAMETER/2), 0, 2*Math.PI);
     ctx.fill();
     ctx.closePath();
@@ -34,7 +34,7 @@ function ball(ctx, ballInfo) {
 
 function paddle(ctx, paddleCoord) {
     var canvasCoord = gameCoordToCanvasCoord(paddleCoord, cst.PADDLE_WIDTH, cst.PADDLE_THICKNESS);
-    ctx.fillStyle = styles.whiteColor;
+    ctx.fillStyle = styles.white;
     ctx.fillRect(canvasCoord.x, canvasCoord.y, gamePxToCanvasPx(cst.PADDLE_WIDTH), gamePxToCanvasPx(cst.PADDLE_THICKNESS));
 }
 
