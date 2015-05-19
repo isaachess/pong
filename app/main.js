@@ -2,6 +2,7 @@ var React = require('react');
 var gameStateApi = require('./game-api/game-state.js');
 var cst = require('./game-api/constants.js');
 var Game = require('./Game.jsx');
+var canvas = require('./canvas.js');
 
 var apiMethods = {
     startGame: renderWithApi(gameStateApi.startGame),
@@ -11,19 +12,24 @@ var apiMethods = {
 
 // Render game once to begin
 var gameState = gameStateApi.getGameState();
-renderGame(gameState);
-
+renderCanvas(gameState);
+renderInfo(gameState);
 
 function tickAway() {
     var gameState = gameStateApi.getGameState();
-    renderGame(gameState);
+    renderCanvas(gameState);
+    renderInfo(gameState);
     if (gameState.currentState == cst.CurrentState.InPlay) {
-        setTimeout(() => tickAway(), 10);
+        setTimeout(() => tickAway(), 20);
     }
 }
 
-function renderGame(gameState) {
-    React.render(<Game.Game gameState={gameState} api={apiMethods}/>, document.body);
+function renderCanvas(gameState) {
+    canvas.render(gameState);
+}
+
+function renderInfo(gameState) {
+    React.render(<Game.Info gameState={gameState} api={apiMethods} />, document.getElementById('game-info'));
 }
 
 function renderWithApi(apiCall) {

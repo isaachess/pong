@@ -10,8 +10,8 @@ export function attachKeyListeners() {
 }
 
 export function startPaddleInfo() {
-    var player1 = { x: 0, y: cst.WALL_LENGTH/2 + cst.PADDLE_THICKNESS/2 };
-    var player2 = { x: 0, y: -(cst.WALL_LENGTH/2 + cst.PADDLE_THICKNESS/2) };
+    var player1 = { x: 0, y: cst.WALL_LENGTH/2 - cst.PADDLE_THICKNESS/2 };
+    var player2 = { x: 0, y: -(cst.WALL_LENGTH/2 - cst.PADDLE_THICKNESS/2) };
     return genericPaddleInfo(player1, player2);
 }
 

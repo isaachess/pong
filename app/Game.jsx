@@ -1,69 +1,25 @@
+var styles = require('./styles.js');
 var React = require('react');
 var $ = require('jquery');
 var cst = require('./game-api/constants.js');
-var actualWallLengthScreenPx = 800;
-var conversionFactor = actualWallLengthScreenPx/cst.WALL_LENGTH;
 
-export var Game = React.createClass({
-    render: function () {
-        var gameBoardStyle = {
-            width: gamePxToScreenPx(cst.WALL_LENGTH),
-            height: gamePxToScreenPx(cst.WALL_LENGTH),
-            position: 'relative',
-            border: '1px solid green',
-        };
+export var Info = React.createClass({
+    render: function() {
         var gameState = this.props.gameState;
         var api = this.props.api;
         return (
-            <div style={gameBoardStyle}>
-                <Ball ballInfo={gameState.ballInfo} />
-                <Paddle paddleInfo={gameState.paddleInfo.player1} />
-                <Paddle paddleInfo={gameState.paddleInfo.player2} />
+            <div>
+                <Score score={gameState.score.player1} player='player1' />
+                <Score score={gameState.score.player2} player='player2' />
                 <GameInfo gameState={gameState} api={api} />
-                <Score score={gameState.score} />
             </div>
-        );
-    }
-});
-
-var Ball = React.createClass({
-    render: function() {
-        var ballInfo = this.props.ballInfo;
-        var ballStyle = {
-            width: gamePxToScreenPx(cst.BALL_DIAMETER),
-            height: gamePxToScreenPx(cst.BALL_DIAMETER),
-            borderRadius: gamePxToScreenPx(cst.BALL_DIAMETER/2),
-            position: 'absolute',
-            left: gameCoordToScreenCoord(ballInfo.ballLocation.x, cst.BALL_DIAMETER),
-            top: gameCoordToScreenCoord(ballInfo.ballLocation.y, cst.BALL_DIAMETER),
-            border: '1px solid blue',
-        };
-        return (
-            <div style={ballStyle}></div>
-        );
-    }
-});
-
-var Paddle = React.createClass({
-    render: function() {
-        var paddleInfo = this.props.paddleInfo;
-        var paddleStyle = {
-            width: gamePxToScreenPx(cst.PADDLE_WIDTH),
-            height: gamePxToScreenPx(cst.PADDLE_THICKNESS),
-            position: 'absolute',
-            left: gameCoordToScreenCoord(paddleInfo.x, cst.PADDLE_WIDTH),
-            top: gameCoordToScreenCoord(paddleInfo.y, cst.PADDLE_THICKNESS),
-            border: '1px solid purple',
-        };
-        return (
-            <div style={paddleStyle}></div>
         );
     }
 });
 
 var GameInfo = React.createClass({
     render: function() {
-        var keyHandler, message, key;
+        var keyHandler, largeMessage, instruction, key;
         var gameState = this.props.gameState;
         var currentState = gameState.currentState;
         var api = this.props.api;
@@ -72,19 +28,22 @@ var GameInfo = React.createClass({
         } else if (currentState == cst.CurrentState.Beginning) {
             keyHandler = handleKeyDown(api.startGame);
             key = cst.CurrentState.Beginning;
-            message = 'Press enter to begin.';
+            largeMessage = 'PONG!';
+            instruction = 'Press enter to begin.';
         } else if (currentState == cst.CurrentState.BetweenPlay) {
             keyHandler = handleKeyDown(api.resumeGame);
             key = cst.CurrentState.BetweenPlay;
-            message = gameState.score.lastScorer + ' scores! Press enter to continue.';
+            largeMessage = gameState.score.lastScorer + ' scores!';
+            instruction = 'Press enter to continue.';
         } else if (currentState == cst.CurrentState.End) {
             keyHandler = handleKeyDown(api.restartGame);
             key = cst.CurrentState.End;
-            message = 'Game over! Who won?';
+            largeMessage = 'Someone wins!';
+            instruction = 'Press enter to play again.';
         } else {
             throw new Error('Cannot match CurrentState to any GameInfo to render.');
         }
-        return <GameInfoAction key={key} keyHandler={keyHandler} message={message} />;
+        return <GameInfoAction key={key} keyHandler={keyHandler} largeMessage={largeMessage} instruction={instruction} />;
     }
 });
 
@@ -96,18 +55,34 @@ var GameInfoAction = React.createClass({
         $(document.body).off('keydown', this.props.keyHandler);
     },
     render: function() {
-        var message = this.props.message;
-        var distanceFromEdge = 0.15*actualWallLengthScreenPx;
+        var largeMessage = this.props.largeMessage;
+        var instruction = this.props.instruction;
+        var distanceFromEdge = '10%';
         var gameInfoStyle = {
             position: 'absolute',
             top: distanceFromEdge,
             bottom: distanceFromEdge,
             left: distanceFromEdge,
             right: distanceFromEdge,
-            border: "1px solid red",
+            border: "20px solid "+styles.whiteColor,
+            backgroundColor: styles.grayColor,
+            fontFamily: 'VT323',
+            color: styles.whiteColor,
+        };
+        var largeMessageStyle = {
+            padding: '30px 0',
+            fontSize: '90px',
+            textAlign: 'center',
+        };
+        var instructionStyle = {
+            fontSize: '30px',
+            textAlign: 'center',
         };
         return (
-            <div style={gameInfoStyle}>{message}</div>
+            <div style={gameInfoStyle}>
+                <div style={largeMessageStyle}>{largeMessage}</div>
+                <div style={instructionStyle}>{instruction}</div>
+            </div>
         );
     }
 });
@@ -138,12 +113,3 @@ function handleKeyDown(methodForKeyDown) {
         }
     };
 }
-
-function gamePxToScreenPx(gamePx) {
-    return gamePx*conversionFactor;
-}
-
-function gameCoordToScreenCoord(gameCoord, thickness) {
-    return gamePxToScreenPx(gameCoord + cst.WALL_LENGTH/2 - Number(thickness)/2);
-}
-
