@@ -20,7 +20,7 @@ export var Info = React.createClass({
 
 var GameInfo = React.createClass({
     render: function() {
-        var keyHandler, largeMessage, instruction, key;
+        var keyHandler, largeMessage, instructions, keyInstruction, key;
         var gameState = this.props.gameState;
         var currentState = gameState.currentState;
         var api = this.props.api;
@@ -30,22 +30,22 @@ var GameInfo = React.createClass({
             keyHandler = handleKeyDown(api.startGame);
             key = cst.CurrentState.Beginning;
             largeMessage = 'PONG!';
-            instruction = 'Press enter to begin.';
+            instructions = ['Player 1: K/L keys. Player 2: A/S keys.', 'Press enter to begin.'];
         } else if (currentState == cst.CurrentState.BetweenPlay) {
             keyHandler = handleKeyDown(api.resumeGame);
             key = cst.CurrentState.BetweenPlay;
             largeMessage = formattedPlayerString(gameState.score.lastScorer) + ' scores!';
-            instruction = 'Press enter to continue.';
+            instructions = ['Press enter to continue.'];
         } else if (currentState == cst.CurrentState.End) {
             var winner = winnerFromScore(gameState.score);
             keyHandler = handleKeyDown(api.restartGame);
             key = cst.CurrentState.End;
             largeMessage = formattedPlayerString(winner)+' wins!';
-            instruction = 'Press enter to play again.';
+            instructions = ['Press enter to play again.'];
         } else {
             throw new Error('Cannot match CurrentState to any GameInfo to render.');
         }
-        return <GameInfoAction key={key} keyHandler={keyHandler} largeMessage={largeMessage} instruction={instruction} />;
+        return <GameInfoAction key={key} keyHandler={keyHandler} largeMessage={largeMessage} instructions={instructions} keyInstruction={keyInstruction} />;
     }
 });
 
@@ -58,7 +58,7 @@ var GameInfoAction = React.createClass({
     },
     render: function() {
         var largeMessage = this.props.largeMessage;
-        var instruction = this.props.instruction;
+        var instructions = this.props.instructions;
         var distanceFromEdge = '10%';
         var gameInfoStyle = {
             position: 'absolute',
@@ -77,13 +77,15 @@ var GameInfoAction = React.createClass({
             textAlign: 'center',
         };
         var instructionStyle = {
+            paddingBottom: '20px',
             fontSize: '30px',
             textAlign: 'center',
         };
+        var renderedInstructions = _.map(instructions, (instruction) => <div style={instructionStyle}>{instruction}</div>);
         return (
             <div style={gameInfoStyle}>
                 <div style={largeMessageStyle}>{largeMessage}</div>
-                <div style={instructionStyle}>{instruction}</div>
+                {renderedInstructions}
             </div>
         );
     }
