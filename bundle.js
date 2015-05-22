@@ -114,7 +114,7 @@
 	var ball = __webpack_require__(9);
 	var cst = __webpack_require__(3);
 	var score = __webpack_require__(10);
-	var vectors = __webpack_require__(11);
+	var math = __webpack_require__(11);
 	var ai = __webpack_require__(12);
 
 	var gameState;
@@ -179,7 +179,7 @@
 	}
 
 	function nextTick(prevGameState, paddleDirections) {
-	    var potentialBallLocation = vectors.addVectors(prevGameState.ballInfo.ballLocation, prevGameState.ballInfo.ballVector);
+	    var potentialBallLocation = math.addVectors(prevGameState.ballInfo.ballLocation, prevGameState.ballInfo.ballVector);
 	    var newScoreInfo = score.newScoreInfo(prevGameState.score, potentialBallLocation);
 	    var newPaddleInfo = paddles.newPaddleLocations(prevGameState.paddleInfo, paddleDirections);
 	    var newBallInfo = ball.newBallInfo(prevGameState.ballInfo, newPaddleInfo, potentialBallLocation);
@@ -269,9 +269,9 @@
 
 	var styles = __webpack_require__(7);
 	var React = __webpack_require__(6);
-	var classnames = __webpack_require__(13);
-	var $ = __webpack_require__(16);
-	var _ = __webpack_require__(14);
+	var classnames = __webpack_require__(14);
+	var $ = __webpack_require__(15);
+	var _ = __webpack_require__(13);
 	var cst = __webpack_require__(3);
 
 	var ai = {
@@ -600,8 +600,8 @@
 	exports.bounceOffPaddles = bounceOffPaddles;
 	exports.movePaddle = movePaddle;
 	var cst = __webpack_require__(3);
-	var vectors = __webpack_require__(11);
-	var $ = __webpack_require__(16);
+	var math = __webpack_require__(11);
+	var $ = __webpack_require__(15);
 
 	var keypresses = exports.keypresses = blankKeypresses();
 
@@ -629,7 +629,7 @@
 	}
 
 	function bounceOffPaddles(vectorToBounce, potentialLocation, paddleInfo) {
-	    var ballRect = vectors.getRectanglePoints(potentialLocation, cst.BALL_DIAMETER, cst.BALL_DIAMETER);
+	    var ballRect = math.getRectanglePoints(potentialLocation, cst.BALL_DIAMETER, cst.BALL_DIAMETER);
 	    if (ballHitsOnePaddle(ballRect, paddleInfo.player1)) {
 	        return bounceVector(vectorToBounce, potentialLocation, paddleInfo.player1);
 	    } else if (ballHitsOnePaddle(ballRect, paddleInfo.player2)) {
@@ -642,12 +642,12 @@
 
 	function bounceVector(vectorToBounce, potentialLocation, singlePaddleCoord) {
 	    var modifiedVector = alterForPaddleLocation(vectorToBounce, potentialLocation, singlePaddleCoord);
-	    return vectors.bounceY(modifiedVector);
+	    return math.bounceY(modifiedVector);
 	}
 
 	function ballHitsOnePaddle(ballRect, singlePaddleCoord) {
-	    var paddleRect = vectors.getRectanglePoints(singlePaddleCoord, cst.PADDLE_WIDTH, cst.PADDLE_THICKNESS);
-	    return vectors.rectanglesIntersect(ballRect, paddleRect);
+	    var paddleRect = math.getRectanglePoints(singlePaddleCoord, cst.PADDLE_WIDTH, cst.PADDLE_THICKNESS);
+	    return math.rectanglesIntersect(ballRect, paddleRect);
 	}
 
 	function movePaddleCoordinate(coordinate, direction) {
@@ -662,12 +662,12 @@
 
 	function movePaddleLeft(coordinate) {
 	    var amountToMove = isPaddleAtLeftEdge(coordinate) ? { x: 0, y: 0 } : cst.PADDLE_VECTOR;
-	    return vectors.subtractVectors(coordinate, amountToMove);
+	    return math.subtractVectors(coordinate, amountToMove);
 	}
 
 	function movePaddleRight(coordinate) {
 	    var amountToMove = isPaddleAtRightEdge(coordinate) ? { x: 0, y: 0 } : cst.PADDLE_VECTOR;
-	    return vectors.addVectors(coordinate, amountToMove);
+	    return math.addVectors(coordinate, amountToMove);
 	}
 
 	function isPaddleAtLeftEdge(coordinate) {
@@ -683,7 +683,7 @@
 	    var ballPercentDistanceFromPaddleCenter = (ballLocation.x - singlePaddleCoord.x) / (cst.PADDLE_WIDTH / 2 + cst.BALL_DIAMETER / 2); // Divide by two at end because we are dealing with center points
 	    var baseAngle = 90 - (90 - cst.SMALLEST_ANGLE) * Math.abs(ballPercentDistanceFromPaddleCenter);
 	    var angleToUse = ballPercentDistanceFromPaddleCenter > 0 ? baseAngle : 180 - baseAngle; // Adjust for whether is left or right side of paddle
-	    var angleInRadians = vectors.degreesToRadians(angleToUse);
+	    var angleInRadians = math.degreesToRadians(angleToUse);
 	    var magnitude = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
 	    return {
 	        x: Math.round(magnitude * Math.cos(angleInRadians) * 100) / 100,
@@ -749,9 +749,9 @@
 
 	exports.startBallInfo = startBallInfo;
 	exports.newBallInfo = newBallInfo;
-	var walls = __webpack_require__(15);
-	var _ = __webpack_require__(14);
-	var vectors = __webpack_require__(11);
+	var walls = __webpack_require__(16);
+	var _ = __webpack_require__(13);
+	var math = __webpack_require__(11);
 	var paddles = __webpack_require__(8);
 	var cst = __webpack_require__(3);
 
@@ -762,7 +762,7 @@
 
 	function newBallInfo(oldBallInfo, paddleInfo, potentialLocation) {
 	    var newVector = newBallVector(oldBallInfo, paddleInfo, potentialLocation);
-	    var newLocation = vectors.addVectors(oldBallInfo.ballLocation, newVector);
+	    var newLocation = math.addVectors(oldBallInfo.ballLocation, newVector);
 	    return genericBallInfo(newLocation, newVector);
 	}
 
@@ -794,7 +794,7 @@
 	exports.newScoreInfo = newScoreInfo;
 	exports.currentStatePerScore = currentStatePerScore;
 	var cst = __webpack_require__(3);
-	var vectors = __webpack_require__(11);
+	var math = __webpack_require__(11);
 
 	function startScore() {
 	    return genericScore(0, 0);
@@ -830,9 +830,9 @@
 
 	function playerWillScore(potentialBallLocation) {
 	    // Returns string 'player1', 'player2', or null if no score
-	    var ballRect = vectors.getRectanglePoints(potentialBallLocation, cst.BALL_DIAMETER, cst.BALL_DIAMETER);
-	    var gameRect = vectors.getRectanglePoints({ x: 0, y: 0 }, cst.WALL_LENGTH, cst.WALL_LENGTH);
-	    if (!vectors.rectanglesIntersect(ballRect, gameRect)) {
+	    var ballRect = math.getRectanglePoints(potentialBallLocation, cst.BALL_DIAMETER, cst.BALL_DIAMETER);
+	    var gameRect = math.getRectanglePoints({ x: 0, y: 0 }, cst.WALL_LENGTH, cst.WALL_LENGTH);
+	    if (!math.rectanglesIntersect(ballRect, gameRect)) {
 	        if (potentialBallLocation.y < 0) {
 	            return "player1";
 	        } else {
@@ -916,7 +916,7 @@
 	"use strict";
 
 	exports.move = move;
-	var _ = __webpack_require__(14);
+	var _ = __webpack_require__(13);
 	var paddles = __webpack_require__(8);
 	var cst = __webpack_require__(3);
 
@@ -987,59 +987,6 @@
 
 /***/ },
 /* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2015 Jed Watson.
-	  Licensed under the MIT License (MIT), see
-	  http://jedwatson.github.io/classnames
-	*/
-
-	function classNames () {
-		'use strict';
-
-		var classes = '';
-
-		for (var i = 0; i < arguments.length; i++) {
-			var arg = arguments[i];
-			if (!arg) continue;
-
-			var argType = typeof arg;
-
-			if ('string' === argType || 'number' === argType) {
-				classes += ' ' + arg;
-
-			} else if (Array.isArray(arg)) {
-				classes += ' ' + classNames.apply(null, arg);
-
-			} else if ('object' === argType) {
-				for (var key in arg) {
-					if (arg.hasOwnProperty(key) && arg[key]) {
-						classes += ' ' + key;
-					}
-				}
-			}
-		}
-
-		return classes.substr(1);
-	}
-
-	// safely export classNames for node / browserify
-	if (typeof module !== 'undefined' && module.exports) {
-		module.exports = classNames;
-	}
-
-	/* global define */
-	// safely export classNames for RequireJS
-	if (true) {
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() {
-			return classNames;
-		}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	}
-
-
-/***/ },
-/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -13248,45 +13195,60 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17)(module), (function() { return this; }())))
 
 /***/ },
-/* 15 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2015 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
 
-	exports.bounceOffWalls = bounceOffWalls;
-	var constants = __webpack_require__(3);
-	var vectors = __webpack_require__(11);
+	function classNames () {
+		'use strict';
 
-	function bounceOffWalls(vectorToBounce, potentialLocation) {
-	    if (locationHitsAnyWall(potentialLocation)) {
-	        return bounceVector(vectorToBounce);
-	    } else {
-	        return vectorToBounce;
-	    }
+		var classes = '';
+
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (!arg) continue;
+
+			var argType = typeof arg;
+
+			if ('string' === argType || 'number' === argType) {
+				classes += ' ' + arg;
+
+			} else if (Array.isArray(arg)) {
+				classes += ' ' + classNames.apply(null, arg);
+
+			} else if ('object' === argType) {
+				for (var key in arg) {
+					if (arg.hasOwnProperty(key) && arg[key]) {
+						classes += ' ' + key;
+					}
+				}
+			}
+		}
+
+		return classes.substr(1);
 	}
 
-	function bounceVector(vectorToBounce) {
-	    return vectors.bounceX(vectorToBounce);
+	// safely export classNames for node / browserify
+	if (typeof module !== 'undefined' && module.exports) {
+		module.exports = classNames;
 	}
 
-	function locationHitsAnyWall(location) {
-	    var ballRect = vectors.getRectanglePoints(location, constants.BALL_DIAMETER, constants.BALL_DIAMETER);
-	    return ballHitsLeftWall(ballRect) || ballHitsRightWall(ballRect);
+	/* global define */
+	// safely export classNames for RequireJS
+	if (true) {
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() {
+			return classNames;
+		}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	}
 
-	function ballHitsLeftWall(ballRect) {
-	    return ballRect.minX <= -constants.WALL_LENGTH / 2;
-	}
-
-	function ballHitsRightWall(ballRect) {
-	    return ballRect.maxX >= constants.WALL_LENGTH / 2;
-	}
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -22495,6 +22457,44 @@
 
 	}));
 
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	exports.bounceOffWalls = bounceOffWalls;
+	var constants = __webpack_require__(3);
+	var math = __webpack_require__(11);
+
+	function bounceOffWalls(vectorToBounce, potentialLocation) {
+	    if (locationHitsAnyWall(potentialLocation)) {
+	        return bounceVector(vectorToBounce);
+	    } else {
+	        return vectorToBounce;
+	    }
+	}
+
+	function bounceVector(vectorToBounce) {
+	    return math.bounceX(vectorToBounce);
+	}
+
+	function locationHitsAnyWall(location) {
+	    var ballRect = math.getRectanglePoints(location, constants.BALL_DIAMETER, constants.BALL_DIAMETER);
+	    return ballHitsLeftWall(ballRect) || ballHitsRightWall(ballRect);
+	}
+
+	function ballHitsLeftWall(ballRect) {
+	    return ballRect.minX <= -constants.WALL_LENGTH / 2;
+	}
+
+	function ballHitsRightWall(ballRect) {
+	    return ballRect.maxX >= constants.WALL_LENGTH / 2;
+	}
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 
 /***/ },
 /* 17 */
