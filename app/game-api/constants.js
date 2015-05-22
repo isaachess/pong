@@ -9,8 +9,8 @@ export var MAX_POINTS = 5;
 export var BALL_VELOCITY = 10;
 export var AI_DIFFICULTY = {
     easy: 0.8,
-    medium: 0.85,
-    hard: 0.9,
+    medium: 0.9,
+    hard: 1,
 };
 
 export var GameState = {
