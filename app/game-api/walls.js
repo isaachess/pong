@@ -1,5 +1,5 @@
 var constants = require('./constants.js');
-var vectors = require('./vectors.js');
+var math = require('./math.js');
 
 export function bounceOffWalls(vectorToBounce, potentialLocation) {
     if (locationHitsAnyWall(potentialLocation)) {
@@ -11,11 +11,11 @@ export function bounceOffWalls(vectorToBounce, potentialLocation) {
 }
 
 function bounceVector(vectorToBounce) {
-    return vectors.bounceX(vectorToBounce);
+    return math.bounceX(vectorToBounce);
 }
 
 function locationHitsAnyWall(location) {
-    var ballRect = vectors.getRectanglePoints(location, constants.BALL_DIAMETER, constants.BALL_DIAMETER);
+    var ballRect = math.getRectanglePoints(location, constants.BALL_DIAMETER, constants.BALL_DIAMETER);
     return ballHitsLeftWall(ballRect) || ballHitsRightWall(ballRect);
 }
 

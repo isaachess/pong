@@ -1,5 +1,5 @@
 var cst = require('./constants.js');
-var vectors = require('./vectors.js');
+var math = require('./math.js');
 
 export function startScore() {
     return genericScore(0, 0);
@@ -36,9 +36,9 @@ function genericScore(player1Score, player2Score, lastScorer) {
 
 function playerWillScore(potentialBallLocation) {
     // Returns string 'player1', 'player2', or null if no score
-    var ballRect = vectors.getRectanglePoints(potentialBallLocation, cst.BALL_DIAMETER, cst.BALL_DIAMETER);
-    var gameRect = vectors.getRectanglePoints({x: 0, y: 0}, cst.WALL_LENGTH, cst.WALL_LENGTH);
-    if (!vectors.rectanglesIntersect(ballRect, gameRect)) {
+    var ballRect = math.getRectanglePoints(potentialBallLocation, cst.BALL_DIAMETER, cst.BALL_DIAMETER);
+    var gameRect = math.getRectanglePoints({x: 0, y: 0}, cst.WALL_LENGTH, cst.WALL_LENGTH);
+    if (!math.rectanglesIntersect(ballRect, gameRect)) {
         if (potentialBallLocation.y < 0) {
             return 'player1';
         } else {

@@ -1,6 +1,6 @@
 var walls = require('./walls.js');
 var _ = require('lodash');
-var vectors = require('./vectors.js');
+var math = require('./math.js');
 var paddles = require('./paddles.js');
 var cst = require('./constants.js');
 
@@ -11,7 +11,7 @@ export function startBallInfo() {
 
 export function newBallInfo(oldBallInfo, paddleInfo, potentialLocation) {
     var newVector = newBallVector(oldBallInfo, paddleInfo, potentialLocation);
-    var newLocation = vectors.addVectors(oldBallInfo.ballLocation, newVector);
+    var newLocation = math.addVectors(oldBallInfo.ballLocation, newVector);
     return genericBallInfo(newLocation, newVector);
 }
 

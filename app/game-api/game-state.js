@@ -2,7 +2,7 @@ var paddles = require('./paddles.js');
 var ball = require('./ball.js');
 var cst = require('./constants.js');
 var score = require('./score.js');
-var vectors = require('./vectors.js');
+var math = require('./math.js');
 var ai = require('./ai.js');
 
 var gameState;
@@ -65,7 +65,7 @@ function genericGameState(currentState, ballInfo, paddleInfo, scoreInfo, ais) {
 }
 
 function nextTick(prevGameState, paddleDirections) {
-    var potentialBallLocation = vectors.addVectors(prevGameState.ballInfo.ballLocation, prevGameState.ballInfo.ballVector);
+    var potentialBallLocation = math.addVectors(prevGameState.ballInfo.ballLocation, prevGameState.ballInfo.ballVector);
     var newScoreInfo = score.newScoreInfo(prevGameState.score, potentialBallLocation);
     var newPaddleInfo = paddles.newPaddleLocations(prevGameState.paddleInfo, paddleDirections);
     var newBallInfo = ball.newBallInfo(prevGameState.ballInfo, newPaddleInfo, potentialBallLocation);
