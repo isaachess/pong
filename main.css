@@ -1,0 +1,27 @@
+body {
+    background-color: black;
+}
+
+.game {
+    margin-top: 10px;
+    margin: 0 auto;
+    width: 90vh;
+    height: 90vh;
+    position: relative;
+    vertical-align: middle;
+}
+
+.game-spot {
+}
+
+#pong-game {
+    height: 100%;
+}
+
+.selected {
+    color: #FFFF00;
+}
+
+.link {
+    cursor: pointer;
+}
