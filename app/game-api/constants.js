@@ -6,6 +6,12 @@ export var PADDLE_WIDTH = 150;
 export var SMALLEST_ANGLE = 25;
 export var PADDLE_VECTOR = { x: 6, y: 0 };
 export var MAX_POINTS = 5;
+export var BALL_VELOCITY = 10;
+export var AI_DIFFICULTY = {
+    easy: 0.8,
+    medium: 0.85,
+    hard: 0.9,
+};
 
 export var GameState = {
     ballInfo: BallInfo,
@@ -13,13 +19,22 @@ export var GameState = {
     score: Score,
     message: '',
     currentState: CurrentState,
+    ai: Ai,
+};
+
+export var Ai = {
+    players: [Player], // array of 'Player' type, telling which players should be controlled by the ai
+    difficulty: '', // Can be easy, medium, or hard
 };
 
 export var Score = {
     player1: 0,
     player2: 0,
-    lastScorer: '' // Acceptable values are 'player1' and 'player2'
+    lastScorer: Player,
 };
+
+// Acceptable values are 'player1' and 'player2'
+export var Player = '';
 
 export var CurrentState = {
     Beginning: 0,
@@ -45,3 +60,7 @@ export var PaddleDirections = {
 
 export var Coordinate = { x: 0, y: 0 };
 
+export var Line = {
+    slope: 0,
+    yIntercept: 0,
+};

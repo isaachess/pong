@@ -39,7 +39,7 @@ function playerWillScore(potentialBallLocation) {
     var ballRect = vectors.getRectanglePoints(potentialBallLocation, cst.BALL_DIAMETER, cst.BALL_DIAMETER);
     var gameRect = vectors.getRectanglePoints({x: 0, y: 0}, cst.WALL_LENGTH, cst.WALL_LENGTH);
     if (!vectors.rectanglesIntersect(ballRect, gameRect)) {
-        if (potentialBallLocation.y > 0) {
+        if (potentialBallLocation.y < 0) {
             return 'player1';
         } else {
             return 'player2';

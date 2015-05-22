@@ -5,7 +5,7 @@ var Game = require('./Game.jsx');
 var canvas = require('./canvas.js');
 
 var apiMethods = {
-    startGame: renderWithApi(gameStateApi.startGame),
+    startGame: startGame,
     resumeGame: renderWithApi(gameStateApi.resumeGame),
     restartGame: renderWithApi(gameStateApi.restartGame),
 };
@@ -37,4 +37,9 @@ function renderWithApi(apiCall) {
         apiCall();
         tickAway();
     };
+}
+
+function startGame(ais) {
+    gameStateApi.startGame(ais);
+    tickAway();
 }

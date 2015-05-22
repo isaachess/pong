@@ -17,3 +17,11 @@ body {
 #pong-game {
     height: 100%;
 }
+
+.selected {
+    color: #FFFF00;
+}
+
+.link {
+    cursor: pointer;
+}

@@ -98,7 +98,7 @@ function blankKeypresses() {
     };
 }
 
-function movePaddle(player, direction) {
+export function movePaddle(player, direction) {
     keypresses[player] = direction;
 }
 

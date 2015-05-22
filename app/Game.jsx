@@ -1,8 +1,14 @@
 var styles = require('./styles.js');
 var React = require('react');
+var classnames = require('classnames');
 var $ = require('jquery');
 var _ = require('lodash');
 var cst = require('./game-api/constants.js');
+
+var ai = {
+    players: [],
+    difficulty: 'easy',
+};
 
 export var Info = React.createClass({
     render: function() {
@@ -27,10 +33,10 @@ var GameInfo = React.createClass({
         if (currentState == cst.CurrentState.InPlay) {
             return null;
         } else if (currentState == cst.CurrentState.Beginning) {
-            keyHandler = handleKeyDown(api.startGame);
+            keyHandler = handleKeyDown(api.startGame, [ai]);
             key = cst.CurrentState.Beginning;
             largeMessage = 'PONG!';
-            instructions = ['Player 1: K/L keys. Player 2: A/S keys.', 'Press enter to begin.'];
+            instructions = ['Player 1: A/S keys. Player 2: K/L keys.', 'Press enter to begin.'];
         } else if (currentState == cst.CurrentState.BetweenPlay) {
             keyHandler = handleKeyDown(api.resumeGame);
             key = cst.CurrentState.BetweenPlay;
@@ -45,9 +51,13 @@ var GameInfo = React.createClass({
         } else {
             throw new Error('Cannot match CurrentState to any GameInfo to render.');
         }
-        return <GameInfoAction key={key} keyHandler={keyHandler} largeMessage={largeMessage} instructions={instructions} keyInstruction={keyInstruction} />;
+        return <GameInfoAction key={key} keyHandler={keyHandler} largeMessage={largeMessage} instructions={instructions} keyInstruction={keyInstruction} currentState={currentState} />;
     }
 });
+
+/////////////////////
+/// Info sections ///
+/////////////////////
 
 var GameInfoAction = React.createClass({
     componentDidMount: function() {
@@ -59,6 +69,8 @@ var GameInfoAction = React.createClass({
     render: function() {
         var largeMessage = this.props.largeMessage;
         var instructions = this.props.instructions;
+        var currentState = this.props.currentState;
+        var aiControls;
         var distanceFromEdge = '10%';
         var gameInfoStyle = {
             position: 'absolute',
@@ -82,11 +94,100 @@ var GameInfoAction = React.createClass({
             textAlign: 'center',
         };
         var renderedInstructions = _.map(instructions, (instruction) => <div style={instructionStyle}>{instruction}</div>);
+        if (currentState == cst.CurrentState.Beginning) {
+            aiControls =
+                <div style={instructionStyle}>
+                    <AiSelector player={'player1'} />
+                    <AiSelector player={'player2'} />
+                    <AiDifficulty />
+                </div>;
+        }
         return (
             <div style={gameInfoStyle}>
                 <div style={largeMessageStyle}>{largeMessage}</div>
+                {aiControls}
                 {renderedInstructions}
             </div>
+        );
+    }
+});
+
+var AiDifficulty = React.createClass({
+    getInitialState: function() {
+        return this.getSelectedState();
+    },
+    getSelectedState: function() {
+        return {
+            'easy': this.isDifficultySelected('easy'),
+            'medium': this.isDifficultySelected('medium'),
+            'hard': this.isDifficultySelected('hard'),
+        };
+    },
+    isDifficultySelected: function(difficulty) {
+        return ai.difficulty == difficulty;
+    },
+    selectDifficulty: function(difficulty) {
+        ai.difficulty = difficulty;
+        this.setState(this.getSelectedState());
+    },
+    selectEasy: function() {return this.selectDifficulty('easy');},
+    selectMedium: function() {return this.selectDifficulty('medium');},
+    selectHard: function() {return this.selectDifficulty('hard');},
+    render: function() {
+        var easyClasses = classnames({
+            'selected': this.state.easy,
+            'link': true,
+        });
+        var mediumClasses = classnames({
+            'selected': this.state.medium,
+            'link': true,
+        });
+        var hardClasses = classnames({
+            'selected': this.state.hard,
+            'link': true,
+        });
+        return (
+            <div>
+                <span>Comp difficulty: </span>
+                <span className={easyClasses} onClick={this.selectEasy}>Easy </span>
+                <span className={mediumClasses} onClick={this.selectMedium}>Medium </span>
+                <span className={hardClasses} onClick={this.selectHard}>Hard </span>
+            </div>
+        );
+    }
+});
+
+var AiSelector = React.createClass({
+    getInitialState: function() {
+        return this.getSelectedState();
+    },
+    getSelectedState: function() {
+        return { humanSelected: this.isHumanSelected(this.props.player) };
+    },
+    isHumanSelected: function(player) {
+        return !_.contains(ai.players, player);
+    },
+    selectHuman: function() {
+        _.remove(ai.players, (player) => this.props.player == player);
+        this.setState(this.getSelectedState());
+    },
+    selectComputer: function() {
+        _.remove(ai.players, (player) => this.props.player == player);
+        ai.players.push(this.props.player);
+        this.setState(this.getSelectedState());
+    },
+    render: function() {
+        var player = this.props.player;
+        var humanClasses = classnames({
+            'selected': this.state.humanSelected,
+            'link': true,
+        });
+        var computerClasses = classnames({
+            'selected': !this.state.humanSelected,
+            'link': true,
+        });
+        return (
+            <div>{formattedPlayerString(player)} <span onClick={this.selectHuman} className={humanClasses}>Human</span> <span onClick={this.selectComputer} className={computerClasses}>Computer</span></div>
         );
     }
 });
@@ -97,7 +198,7 @@ var Score = React.createClass({
         var player = this.props.player;
         var currentState = this.props.currentState;
         var scoreDistance = '10px';
-        var scoreLocation = (player == 'player1') ? {top: scoreDistance} : {bottom: scoreDistance};
+        var scoreLocation = (player == 'player1') ? {bottom: scoreDistance} : {top: scoreDistance};
         var scoreColor = (currentState == cst.CurrentState.InPlay) ? styles.lightGray : styles.white;
         var scoreStyle = _.merge({
             position: 'absolute',
@@ -134,11 +235,11 @@ function winnerFromScore(scoreInfo) {
     }
 }
 
-function handleKeyDown(methodForKeyDown) {
+function handleKeyDown(methodForKeyDown, argsForKeyDown) {
     return function(e) {
         var ENTER = 13;
         if (e.keyCode == ENTER) {
-            methodForKeyDown();
+            methodForKeyDown.apply(methodForKeyDown, argsForKeyDown);
         }
     };
 }

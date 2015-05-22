@@ -3,6 +3,7 @@ var ball = require('./ball.js');
 var cst = require('./constants.js');
 var score = require('./score.js');
 var vectors = require('./vectors.js');
+var ai = require('./ai.js');
 
 var gameState;
 initGameSetup();
@@ -11,9 +12,10 @@ export function getGameState() {
     return gameState;
 }
 
-export function startGame() {
+export function startGame(ais) {
     if (gameState.currentState == cst.CurrentState.Beginning) {
         gameState.currentState = cst.CurrentState.InPlay;
+        gameState = genericGameState(cst.CurrentState.InPlay, ball.startBallInfo(), paddles.startPaddleInfo(), score.startScore(), ais);
         runGame();
     } else {
         gameState = { error: 'Game state is not at the beginning -- cannot start game.' };
@@ -22,7 +24,7 @@ export function startGame() {
 
 export function resumeGame() {
     if (gameState.currentState == cst.CurrentState.BetweenPlay) {
-        gameState = genericGameState(cst.CurrentState.InPlay, ball.startBallInfo(), paddles.startPaddleInfo(), gameState.score);
+        gameState = genericGameState(cst.CurrentState.InPlay, ball.startBallInfo(), paddles.startPaddleInfo(), gameState.score, gameState.ai);
         runGame();
     } else {
         gameState = { error: 'Game state is not between play -- cannot resume game.' };
@@ -35,6 +37,7 @@ export function restartGame() {
 }
 
 function runGame() {
+    ai.move(gameState);
     var newState = nextTick(gameState, paddles.keypresses);
     gameState = newState;
     if (gameState.currentState == cst.CurrentState.InPlay) {
@@ -51,12 +54,13 @@ function initGameSetup() {
     paddles.attachKeyListeners();
 }
 
-function genericGameState(currentState, ballInfo, paddleInfo, scoreInfo) {
+function genericGameState(currentState, ballInfo, paddleInfo, scoreInfo, ais) {
     return {
         currentState: currentState,
         score: scoreInfo,
         ballInfo: ballInfo,
-        paddleInfo: paddleInfo
+        paddleInfo: paddleInfo,
+        ai: ais
     };
 }
 
@@ -66,6 +70,6 @@ function nextTick(prevGameState, paddleDirections) {
     var newPaddleInfo = paddles.newPaddleLocations(prevGameState.paddleInfo, paddleDirections);
     var newBallInfo = ball.newBallInfo(prevGameState.ballInfo, newPaddleInfo, potentialBallLocation);
     var newCurrentState = score.currentStatePerScore(prevGameState.score, newScoreInfo);
-    return genericGameState(newCurrentState, newBallInfo, newPaddleInfo, newScoreInfo);
+    return genericGameState(newCurrentState, newBallInfo, newPaddleInfo, newScoreInfo, prevGameState.ai);
 }
 
