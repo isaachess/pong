@@ -87,7 +87,6 @@
 	function renderInfo(gameState) {
 	    React.render(React.createElement(Game.Info, { gameState: gameState, api: apiMethods }), document.getElementById("game-info"));
 	}
-	console.log("hello");
 
 	function renderWithApi(apiCall) {
 	    return function () {
