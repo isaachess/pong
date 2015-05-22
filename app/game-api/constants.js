@@ -8,8 +8,8 @@ export var PADDLE_VECTOR = { x: 6, y: 0 };
 export var MAX_POINTS = 5;
 export var BALL_VELOCITY = 10;
 export var AI_DIFFICULTY = {
-    easy: 0.8,
-    medium: 0.9,
+    easy: 0.75,
+    medium: 0.87,
     hard: 1,
 };
 
