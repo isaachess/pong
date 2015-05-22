@@ -1,3 +1,7 @@
+# Play live!
+
+Visit http://isaachess.github.io/pong/ to play!
+
 # PONG
 
 Pong for the web built with:
@@ -6,7 +10,3 @@ Pong for the web built with:
 - Canvas
 - React
 - Webpack
-
-# Play live!
-
-Visit http://isaachess.github.io/pong/ to play!
