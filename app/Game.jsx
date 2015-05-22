@@ -1,7 +1,6 @@
 var styles = require('./styles.js');
 var React = require('react');
 var classnames = require('classnames');
-var $ = require('jquery');
 var _ = require('lodash');
 var cst = require('./game-api/constants.js');
 
@@ -61,10 +60,10 @@ var GameInfo = React.createClass({
 
 var GameInfoAction = React.createClass({
     componentDidMount: function() {
-        $(document.body).on('keydown', this.props.keyHandler);
+        document.body.addEventListener('keydown', this.props.keyHandler);
     },
     componentWillUnmount: function() {
-        $(document.body).off('keydown', this.props.keyHandler);
+        document.body.removeEventListener('keydown', this.props.keyHandler);
     },
     render: function() {
         var largeMessage = this.props.largeMessage;

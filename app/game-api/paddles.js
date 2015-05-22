@@ -1,12 +1,11 @@
 var cst = require('./constants.js');
 var math = require('./math.js');
-var $ = require('jquery');
 
 export var keypresses = blankKeypresses();
 
 export function attachKeyListeners() {
-    $(document.body).on('keydown', handleKeydown);
-    $(document.body).on('keyup', handleKeyup);
+    document.body.addEventListener('keydown', handleKeydown);
+    document.body.addEventListener('keyup', handleKeyup);
 }
 
 export function startPaddleInfo() {
