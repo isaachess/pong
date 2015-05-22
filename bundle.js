@@ -206,8 +206,8 @@
 	var MAX_POINTS = exports.MAX_POINTS = 5;
 	var BALL_VELOCITY = exports.BALL_VELOCITY = 10;
 	var AI_DIFFICULTY = exports.AI_DIFFICULTY = {
-	    easy: 0.8,
-	    medium: 0.9,
+	    easy: 0.75,
+	    medium: 0.87,
 	    hard: 1 };
 
 	var GameState = exports.GameState = {
@@ -270,7 +270,7 @@
 	var styles = __webpack_require__(7);
 	var React = __webpack_require__(6);
 	var classnames = __webpack_require__(13);
-	var $ = __webpack_require__(15);
+	var $ = __webpack_require__(16);
 	var _ = __webpack_require__(14);
 	var cst = __webpack_require__(3);
 
@@ -601,7 +601,7 @@
 	exports.movePaddle = movePaddle;
 	var cst = __webpack_require__(3);
 	var vectors = __webpack_require__(11);
-	var $ = __webpack_require__(15);
+	var $ = __webpack_require__(16);
 
 	var keypresses = exports.keypresses = blankKeypresses();
 
@@ -749,7 +749,7 @@
 
 	exports.startBallInfo = startBallInfo;
 	exports.newBallInfo = newBallInfo;
-	var walls = __webpack_require__(16);
+	var walls = __webpack_require__(15);
 	var _ = __webpack_require__(14);
 	var vectors = __webpack_require__(11);
 	var paddles = __webpack_require__(8);
@@ -13251,6 +13251,44 @@
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+
+	exports.bounceOffWalls = bounceOffWalls;
+	var constants = __webpack_require__(3);
+	var vectors = __webpack_require__(11);
+
+	function bounceOffWalls(vectorToBounce, potentialLocation) {
+	    if (locationHitsAnyWall(potentialLocation)) {
+	        return bounceVector(vectorToBounce);
+	    } else {
+	        return vectorToBounce;
+	    }
+	}
+
+	function bounceVector(vectorToBounce) {
+	    return vectors.bounceX(vectorToBounce);
+	}
+
+	function locationHitsAnyWall(location) {
+	    var ballRect = vectors.getRectanglePoints(location, constants.BALL_DIAMETER, constants.BALL_DIAMETER);
+	    return ballHitsLeftWall(ballRect) || ballHitsRightWall(ballRect);
+	}
+
+	function ballHitsLeftWall(ballRect) {
+	    return ballRect.minX <= -constants.WALL_LENGTH / 2;
+	}
+
+	function ballHitsRightWall(ballRect) {
+	    return ballRect.maxX >= constants.WALL_LENGTH / 2;
+	}
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	 * jQuery JavaScript Library v2.1.3
 	 * http://jquery.com/
@@ -22457,44 +22495,6 @@
 
 	}));
 
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	exports.bounceOffWalls = bounceOffWalls;
-	var constants = __webpack_require__(3);
-	var vectors = __webpack_require__(11);
-
-	function bounceOffWalls(vectorToBounce, potentialLocation) {
-	    if (locationHitsAnyWall(potentialLocation)) {
-	        return bounceVector(vectorToBounce);
-	    } else {
-	        return vectorToBounce;
-	    }
-	}
-
-	function bounceVector(vectorToBounce) {
-	    return vectors.bounceX(vectorToBounce);
-	}
-
-	function locationHitsAnyWall(location) {
-	    var ballRect = vectors.getRectanglePoints(location, constants.BALL_DIAMETER, constants.BALL_DIAMETER);
-	    return ballHitsLeftWall(ballRect) || ballHitsRightWall(ballRect);
-	}
-
-	function ballHitsLeftWall(ballRect) {
-	    return ballRect.minX <= -constants.WALL_LENGTH / 2;
-	}
-
-	function ballHitsRightWall(ballRect) {
-	    return ballRect.maxX >= constants.WALL_LENGTH / 2;
-	}
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
 
 /***/ },
 /* 17 */
